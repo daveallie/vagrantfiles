@@ -3,7 +3,7 @@
 
 Vagrant.configure(2) do |config|
   config.vm.box = "bento/ubuntu-16.04"
-  config.vm.provision :shell, inline: 'sudo -u vagrant HOME=/home/vagrant curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain stable -y 2>&1'
+  config.vm.provision :shell, inline: 'curl https://sh.rustup.rs -sSf | sudo -u vagrant HOME=/home/vagrant sh -s -- --default-toolchain stable -y 2>&1'
 end
 
 client_vagrantfile = File.expand_path('../Vagrantfile.client', __FILE__)
