@@ -1,15 +1,21 @@
 # -*- mode: ruby -*-
 # vi: set ft=ruby :
 
-$script = <<SCRIPT
-#!/bin/bash
+Vagrant.configure(2) do |config|
+  config.vm.box = "bento/ubuntu-16.04"
+  config.vm.provision :shell, inline: setup_ruby
+  config.vm.provision :shell, inline: set_prompt("RUBY-BOX")
+end
+
+def setup_ruby
+  <<-SCRIPT
 su vagrant <<EOF
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -sSL https://get.rvm.io | bash -s stable --ruby
 EOF
 SCRIPT
+end
 
-Vagrant.configure(2) do |config|
-  config.vm.box = "bento/ubuntu-16.04"
-  config.vm.provision :shell, inline: $script
+def set_prompt(box_name)
+  %Q(echo "PS1='\\[\\033[0;32m\\]#{box_name}"'$(q=$?; [[ $q -gt 0 ]] && echo " \\[\\033[0;31m\\]$q")'" \\[\\033[0;37m\\]\\w\\[\\033[0m\\]$ '" >> /home/vagrant/.bashrc)
 end
